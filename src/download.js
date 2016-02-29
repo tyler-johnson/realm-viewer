@@ -2,6 +2,8 @@ import request from "./request";
 import get from "request";
 import fs from "fs-promise";
 import path from "path";
+import {extract} from "tar-stream";
+import {createGunzip} from "zlib";
 
 const realms_url = "https://mcoapi.minecraft.net";
 
@@ -26,13 +28,39 @@ async function getUrl(id, sess) {
 	return body;
 }
 
-export default async function download(sid, sess, cwd) {
-	let url = await getUrl(sid, sess);
-	let stream = fs.createWriteStream(path.resolve(cwd, "world.tar.gz"));
+async function untar(stream, cwd) {
+	let tar = extract();
+
+	tar.on("entry", async function(header, content, next) {
+		try {
+			if (header.type === "directory") {
+				await fs.mkdir(path.resolve(cwd, header.name));
+				content.resume();
+			} else if (header.type === "file") {
+				let out = fs.createWriteStream(path.resolve(cwd, header.name));
+				await new Promise((resolve, reject) => {
+					out.on("finish", resolve);
+					out.on("error", reject);
+					content.pipe(out);
+				});
+			} else {
+				content.resume();
+			}
+
+			next();
+		} catch(e) {
+			next(e);
+		}
+	});
 
 	await new Promise((resolve, reject) => {
-		stream.on("end", resolve);
-		stream.on("error", reject);
-		get(url).pipe(stream);
+		tar.on("finish", resolve);
+		tar.on("error", reject);
+		stream.pipe(createGunzip()).pipe(tar);
 	});
+}
+
+export default async function download(sid, sess, cwd) {
+	let url = await getUrl(sid, sess);
+	await untar(get(url), cwd);
 }
