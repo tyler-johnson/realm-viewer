@@ -1,6 +1,5 @@
 {
   "name": "realm-viewer",
-  "version": "0.0.0",
   "description": "A Node.js server that fetches Minecraft Realms worlds and renders/hosts them as Overviewer maps.",
   "author": "Tyler Johnson <tyler@tylerjohnson.me>",
   "repository": {
@@ -12,7 +11,8 @@
   "scripts": {
     "lint": "jshint src/ test/",
     "build": "make",
-    "prepublish": "npm run lint && npm run build"
+    "prepublish": "npm run lint && npm run build",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {
     "es6-promisify": "^3.0.0",
@@ -20,8 +20,6 @@
     "request": "^2.69.0",
     "uuid": "^2.0.1"
   },
-  "keywords": [],
-  "license": "MIT",
   "devDependencies": {
     "babel-eslint": "^5.0.0",
     "babel-plugin-external-helpers": "^6.5.0",
@@ -34,6 +32,9 @@
     "jshint": "^2.9.1",
     "rollup": "^0.25.4",
     "rollup-plugin-babel": "^2.4.0",
-    "tape": "^4.4.0"
-  }
+    "tape": "^4.4.0",
+    "semantic-release": "^4.3.5"
+  },
+  "keywords": [],
+  "license": "MIT"
 }
