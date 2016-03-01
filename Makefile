@@ -11,6 +11,6 @@ cli.js: src/cli.js $(SRC)
 	TARGET=node $(BIN)/rollup $< -c -f cjs >> $@
 
 clean:
-	rm index.js cli.js
+	rm -rf index.js cli.js
 
 .PHONY: build

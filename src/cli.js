@@ -24,7 +24,7 @@ let argv = minimist(process.argv.slice(2), {
 
 if (argv.help) {
 	console.log(`
-$ realm-viewer [OPTIONS]
+$ realmviewer [DIR] [OPTIONS]
 `.replace(/^\t+/gm, (m) => repeat("  ", m.length)));
 	process.exit(0);
 }
