@@ -3,7 +3,6 @@ import {merge,repeat} from "lodash";
 import {readFileSync} from "fs";
 import path from "path";
 import config from "cloud-env";
-import ms from "ms";
 
 // using standard require so rollup doesn't include it
 const realmviewer = require("./");
