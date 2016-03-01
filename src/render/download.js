@@ -4,10 +4,15 @@ import fs from "fs-promise";
 import path from "path";
 import {extract} from "tar-stream";
 import {createGunzip} from "zlib";
+import del from "del";
 
 const realms_url = "https://mcoapi.minecraft.net";
 
 async function getUrl(id, sess) {
+	if (!id) {
+		throw new Error("Missing world id.");
+	}
+	
 	let jar = request.jar();
 	jar.setCookie(request.cookie(`sid=token:${sess.accessToken}:${sess.profile.id}`), realms_url);
 	jar.setCookie(request.cookie(`user=${sess.profile.name}`), realms_url);
@@ -33,11 +38,14 @@ async function untar(stream, cwd) {
 
 	tar.on("entry", async function(header, content, next) {
 		try {
+			let file = path.resolve(cwd, header.name);
+			await del(file);
+
 			if (header.type === "directory") {
-				await fs.mkdir(path.resolve(cwd, header.name));
+				await fs.mkdir(file);
 				content.resume();
 			} else if (header.type === "file") {
-				let out = fs.createWriteStream(path.resolve(cwd, header.name));
+				let out = fs.createWriteStream(file);
 				await new Promise((resolve, reject) => {
 					out.on("finish", resolve);
 					out.on("error", reject);
