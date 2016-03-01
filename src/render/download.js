@@ -12,7 +12,7 @@ async function getUrl(id, sess) {
 	if (!id) {
 		throw new Error("Missing world id.");
 	}
-	
+
 	let jar = request.jar();
 	jar.setCookie(request.cookie(`sid=token:${sess.accessToken}:${sess.profile.id}`), realms_url);
 	jar.setCookie(request.cookie(`user=${sess.profile.name}`), realms_url);
@@ -38,9 +38,13 @@ async function untar(stream, cwd) {
 
 	tar.on("entry", async function(header, content, next) {
 		try {
+			let plen = path.normalize(header.name).split(".").length;
 			let file = path.resolve(cwd, header.name);
-			await del(file);
 
+			// delete root directories
+			if (plen === 1) await del(file);
+
+			// make new file/directory
 			if (header.type === "directory") {
 				await fs.mkdir(file);
 				content.resume();
