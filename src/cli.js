@@ -65,16 +65,8 @@ if (argv.server) {
 }
 
 if (argv.render) {
-	let rendering = false;
-	let render = async () => {
-		if (rendering) return;
-		rendering = true;
-		try { await realmviewer.render(cwd, argv); }
-		catch(e) { console.error(e.stack || e); }
-		rendering = false;
-	};
-
-	let timeout = ms(typeof argv.render === "string" ? argv.render : "24h");
-	setInterval(render, Math.max(5 * 60 * 1000, timeout));
-	render();
+	realmviewer.autorender(cwd, {
+		...argv,
+		interval: argv.render
+	}).catch(panic);
 }
