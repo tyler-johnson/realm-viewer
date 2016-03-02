@@ -62,6 +62,14 @@ async function fetch(cwd) {
 }
 
 async function authenticate(user, pass) {
+	if (typeof user !== "string" || !user) {
+		throw new Error("Missing username.");
+	}
+
+	if (typeof pass !== "string") {
+		throw new Error("Missing password.");
+	}
+
 	let [resp,body] = await request({
 		method: "POST",
 		url: auth_url+"/authenticate",

@@ -1,6 +1,5 @@
 {
-  "name": "realm-viewer",
-  "version": "0.0.0",
+  "name": "realmviewer",
   "description": "A Node.js server that fetches Minecraft Realms worlds and renders/hosts them as Overviewer maps.",
   "author": "Tyler Johnson <tyler@tylerjohnson.me>",
   "repository": {
@@ -8,20 +7,25 @@
     "url": "https://github.com/tyler-johnson/realm-viewer.git"
   },
   "main": "index.js",
-  "jsnext:main": "src/index.js",
+  "bin": "cli.js",
   "scripts": {
-    "lint": "jshint src/ test/",
-    "build": "make",
-    "prepublish": "npm run lint && npm run build"
+    "lint": "eslint src/",
+    "build": "make clean && make",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "dependencies": {
+    "cloud-env": "^0.2.1",
+    "del": "^2.2.0",
     "es6-promisify": "^3.0.0",
+    "express": "^4.13.4",
     "fs-promise": "^0.4.1",
+    "lodash": "^4.5.1",
+    "minimist": "^1.2.0",
+    "ms": "^0.7.1",
     "request": "^2.69.0",
+    "tar-stream": "^1.3.2",
     "uuid": "^2.0.1"
   },
-  "keywords": [],
-  "license": "MIT",
   "devDependencies": {
     "babel-eslint": "^5.0.0",
     "babel-plugin-external-helpers": "^6.5.0",
@@ -29,11 +33,13 @@
     "babel-plugin-transform-es2015-destructuring": "^6.5.0",
     "babel-plugin-transform-es2015-parameters": "^6.5.0",
     "babel-plugin-transform-object-rest-spread": "^6.5.0",
-    "babel-preset-es2015-rollup": "^1.1.1",
     "eslint": "^2.2.0",
-    "jshint": "^2.9.1",
     "rollup": "^0.25.4",
     "rollup-plugin-babel": "^2.4.0",
+    "rollup-plugin-string": "^1.0.1",
+    "semantic-release": "^4.3.5",
     "tape": "^4.4.0"
-  }
+  },
+  "keywords": [],
+  "license": "MIT"
 }
