@@ -3,7 +3,7 @@ import download from "./download";
 import spawn from "./spawn";
 import ms from "ms";
 
-export async function render(cwd=".", {username, password, id, overviewer:bin, config, mapdir}) {
+export async function render(cwd=".", {username, password, id, overviewer:bin, overviewerConfig:config, mapdir}) {
 	let sess = await initAuth(cwd, username, password);
 	await download(id, sess, cwd);
 	await spawn(cwd, bin, {config, mapdir});

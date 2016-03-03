@@ -8,13 +8,19 @@ import config from "cloud-env";
 const realmviewer = require("./");
 
 let argv = minimist(process.argv.slice(2), {
-	string: [ ],
+	string: [ "overviewer", "overviewerConfig", "username", "password", "port" ],
 	boolean: [ "help", "version", "server" ],
 	alias: {
 		h: "help", H: "help",
 		v: "version", V: "version",
 		c: "config",
-		r: "render"
+		r: "render",
+		u: "username",
+		p: "password",
+		b: "overviewer",
+		bin: "overviewer",
+		"bin-config": "overviewerConfig",
+		"overviewer-config": "overviewerConfig"
 	},
 	default: {
 		render: true,
