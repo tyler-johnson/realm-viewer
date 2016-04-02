@@ -45,7 +45,7 @@ let cwd = argv._.length ? argv._[0] : ".";
 
 if (argv.config) {
 	try {
-		merge(argv, require(path.resolve(argv.config)));
+		merge(argv, require(path.resolve(cwd, argv.config)));
 	} catch(e) {
 		if (!/Cannot find module/.test(e.message)) throw e;
 	}
