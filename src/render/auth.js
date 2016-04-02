@@ -6,10 +6,11 @@ import request from "./request";
 const auth_url = "https://authserver.mojang.com";
 
 export class Session {
-	constructor({accessToken,clientToken,selectedProfile,profile}) {
+	constructor({accessToken,clientToken,selectedProfile,profile,worldVersion}) {
 		this.accessToken = accessToken;
 		this.clientToken = clientToken;
 		this.profile = profile || selectedProfile;
+		this.worldVersion = worldVersion;
 	}
 
 	toJSON() {
