@@ -42,7 +42,7 @@ async function untar(stream, cwd) {
 			let file = path.resolve(cwd, header.name);
 
 			// delete root directories
-			if (plen === 1) await del(file);
+			if (plen === 1) await del(file, { force: true });
 
 			// make new file/directory
 			if (header.type === "directory") {
