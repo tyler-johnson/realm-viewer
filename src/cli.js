@@ -44,12 +44,11 @@ if (argv.version) {
 let cwd = argv._.length ? argv._[0] : ".";
 
 if (argv.config) {
-	let src;
-	let cfile = typeof argv.config === "boolean" ? "config.json" : argv.config;
-	cfile = path.resolve(cwd, cfile);
-	try { src = readFileSync(cfile, "utf8"); }
-	catch(e) { e; }
-	if (src) merge(argv, JSON.parse(src));
+	try {
+		merge(argv, require(path.resolve(argv.config)));
+	} catch(e) {
+		if (!/Cannot find module/.test(e.message)) throw e;
+	}
 }
 
 function panic(e) {
