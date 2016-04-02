@@ -16,7 +16,7 @@ async function getUrl(id, sess) {
 	let jar = request.jar();
 	jar.setCookie(request.cookie(`sid=token:${sess.accessToken}:${sess.profile.id}`), realms_url);
 	jar.setCookie(request.cookie(`user=${sess.profile.name}`), realms_url);
-	jar.setCookie(request.cookie(`version=1.8.9`), realms_url);
+	jar.setCookie(request.cookie(`version=1.9.2`), realms_url);
 
 	let [resp,body] = await request({
 		jar, url: realms_url+"/worlds/"+id+"/backups/download"
