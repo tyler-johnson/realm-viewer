@@ -1,5 +1,5 @@
 import request from "./request";
-import get from "request";
+import {get} from "http";
 import fs from "fs-promise";
 import path from "path";
 import {extract} from "tar-stream";
@@ -33,10 +33,10 @@ async function getUrl(id, sess) {
 	return body;
 }
 
-async function untar(stream, cwd) {
-	let tar = extract();
+function untar(cwd) {
+	let untar = extract();
 
-	tar.on("entry", async function(header, content, next) {
+	untar.on("entry", async function(header, content, next) {
 		try {
 			let plen = path.normalize(header.name).split(".").length;
 			let file = path.resolve(cwd, header.name);
@@ -65,14 +65,31 @@ async function untar(stream, cwd) {
 		}
 	});
 
-	await new Promise((resolve, reject) => {
-		tar.on("finish", resolve);
-		tar.on("error", reject);
-		stream.pipe(createGunzip()).pipe(tar);
-	});
+	return untar;
 }
 
 export default async function download(sid, sess, cwd) {
 	let url = await getUrl(sid, sess);
-	await untar(get(url), cwd);
+	let req = get(url);
+	let ver;
+
+	await new Promise((resolve, reject) => {
+		req.on("response", (res) => {
+			ver = res.headers["x-amz-version-id"];
+			if (ver && ver === sess.worldVersion) {
+				req.abort();
+				return resolve();
+			}
+
+			res.on("error", reject)
+				.pipe(createGunzip()).on("error", reject)
+				.pipe(untar(cwd)).on("error", reject)
+				.on("finish", resolve);
+		});
+
+		req.on("error", reject);
+	});
+
+	sess.worldVersion = ver;
+	await sess.save(cwd);
 }
